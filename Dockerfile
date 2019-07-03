@@ -18,6 +18,7 @@ RUN apt-get update && apt-get install -y \
     libfreetype6-dev \
     libjpeg62-turbo-dev \
     libpng-dev \
+    libsodium-dev \
     git \
     vim \
     openssh-server \
@@ -45,6 +46,7 @@ RUN apt-get update && apt-get install -y \
     bcmath \
     json \
     iconv \
+    sodium \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && pecl install mcrypt-1.0.2 && docker-php-ext-enable mcrypt \
     && pecl install xdebug && docker-php-ext-enable xdebug \
