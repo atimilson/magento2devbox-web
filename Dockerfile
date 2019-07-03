@@ -18,7 +18,6 @@ RUN apt-get update && apt-get install -y \
     libfreetype6-dev \
     libjpeg62-turbo-dev \
     libpng-dev \
-    libsodium-dev \
     git \
     vim \
     openssh-server \
@@ -33,6 +32,8 @@ RUN apt-get update && apt-get install -y \
              make && \
              cp src/unison src/unison-fsmonitor /usr/local/bin && \
              cd /root && rm -rf /tmp/unison-2.48.4 \
+    && curl -L https://download.libsodium.org/libsodium/releases/libsodium-1.0.18.tar.gz | tar zxv -C /tmp && \
+            cd /tmp/libsodium-1.0.18 && ./configure && make install \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-configure hash --with-mhash \
     && docker-php-ext-install -j$(nproc) \
