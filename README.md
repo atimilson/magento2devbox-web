@@ -1,27 +1,32 @@
-# Intro
+# Magento DevBox - Web
 
 This repository forked from Magento DevBox - Web magento/magento2devbox-web, 
 as way to install a Magento 2 development environment.
 
-### Should be able to replace this image in your DevBox docker-compose.yml
-
+### You should be able to replace this image in your DevBox docker-compose.yml
+```
+        image: xantek/magento2devbox-web:{latest|version}
+```
 #
 Using Magento DevBox and needed
  - support for PHP 7.3 with required extensions
  - updated unision to prevent issues on windows with mismatch versions
- - opcache enabled by default
-  ```
- /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
- ```
- - xdebug disabled by default
+ - opcache enabled by default (performance)
+ - xdebug disabled by default (performance)
+ - add port 35729 for LiveReload for use with Grunt
+ 
+ #
+ 
+#####To enable Xdebug
  ```
 /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 ```
-
-Reload php-fpm after updating PHP config
+ - uncomment 
+ - reload php-fpm after updating PHP config
 ```
 sudo kill -USR2 {PHP-FPM PID}
 ```
+- ssh tunnel port 9000
 
 
  
