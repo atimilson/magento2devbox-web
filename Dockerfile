@@ -1,4 +1,4 @@
-FROM php:7.2-fpm
+FROM php:7.3-fpm
 
 MAINTAINER "Xantek"
 
@@ -22,7 +22,7 @@ RUN apt-get update && apt-get install -y \
     vim \
     openssh-server \
     supervisor \
-    mysql-client \
+    default-mysql-client \
     ocaml \
     expect \
     gnupg2 \
@@ -51,6 +51,10 @@ RUN apt-get update && apt-get install -y \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && pecl install mcrypt-1.0.2 && docker-php-ext-enable mcrypt \
     && pecl install xdebug && docker-php-ext-enable xdebug \
+    && cp /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini-sav \
+    && echo ";" > /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+    && cat /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini-sav >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+    && rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini-sav \
     && echo "xdebug.remote_enable=1" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
     && echo "xdebug.remote_port=9000" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
     && echo "xdebug.remote_connect_back=0" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
@@ -58,6 +62,11 @@ RUN apt-get update && apt-get install -y \
     && echo "xdebug.idekey=PHPSTORM" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
     && echo "xdebug.max_nesting_level=1000" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
     && chmod 666 /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+    && echo "opcache.enable=1" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini \
+    && echo "opcache.enable_cli=0" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini \
+    && echo "opcache.memory_consumption=256" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini \
+    && echo "opcache.max_accelerated_files=65406" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini \
+    && echo "opcache.save_comments=1" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini \
     && mkdir /var/run/sshd \
     && apt-get purge nodejs \
     && curl -sL https://deb.nodesource.com/setup_9.x | sudo -E bash - \
@@ -68,6 +77,7 @@ RUN apt-get update && apt-get install -y \
     && npm update -g npm \
     && npm install -g grunt-cli \
     && npm install -g gulp \
+    && npm install -g livereload \
     && echo "StrictHostKeyChecking no" >> /etc/ssh/ssh_config \
     && apt-get install -y apache2 \
     && a2enmod rewrite \
@@ -146,7 +156,7 @@ RUN chown -R magento2:magento2 /home/magento2 && \
 # Delete user password to connect with ssh with empty password
 RUN passwd magento2 -d
 
-EXPOSE 80 22 5000 44100
+EXPOSE 80 22 5000 35729 44100
 WORKDIR /home/magento2
 
 USER root
